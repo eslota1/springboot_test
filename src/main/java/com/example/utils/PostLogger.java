@@ -1,7 +1,11 @@
 package com.example.utils;
 
 import java.io.*;
-import java.nio.file.*;
+import java.util.regex.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
@@ -61,36 +65,68 @@ public class PostLogger {
         return content;
     }
 
-    public boolean deleteString(String toDelete){
-    	boolean delete = false;
-		String tmpPath = filePath+".tmp";
-		try {
-			
-			File file1 = new File(filePath);
-			FileReader fr1 = new FileReader(file1);
-			BufferedReader r1 = new BufferedReader(fr1);
+    public boolean deleteInputText (String delete){
+        boolean d = false;
+        String fPath = filePath+".temp";
+        try{
+            File file = new File(filePath);
+            FileReader fr = new FileReader(file);
+            BufferedReader reader = new BufferedReader(fr);
+            File file1 = new File(fPath);
+            FileWriter fw = new FileWriter(file1);
+            BufferedWriter writer = new BufferedWriter(fw);
+            String line = reader.readLine();
 
-			File file2 = new File(tmpPath);
-			FileWriter fr2 = new FileWriter(file2);
-			BufferedWriter r2 = new BufferedWriter(fr2);
+            while (line != null){
+                String deleteTrimLn = delete.trim();
 
-			String line = r1.readLine();
-			while (line != null) {
-				String trimmedLine = line.trim();
-				String toDeleteTrimmed = toDelete.trim();
-				if (line.isEmpty() || !toDeleteTrimmed.equals(trimmedLine)) {
-					r2.write(line+System.lineSeparator());
+                if (line.trim().length() > 0 && !deleteTrimLn.equals(line.trim())){
+                    writer.write(line+System.lineSeparator());
                 }
-				else delete = true;
-				line = r1.readLine();
-			}
-			r1.close();  r2.close();
-			fr1.close(); fr2.close();
-			Files.move(Paths.get(tmpPath), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-			return delete;
-    	} catch (IOException e) {
-			e.printStackTrace();
+                else
+                    d = true;
+
+                line = reader.readLine();
+            }
+            reader.close();
+            writer.close();
+            fr.close();
+            fw.close();
+            return (d && file1.renameTo(file));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
             return false;
-		}
+        }
+    }
+
+    public String searchInputText (String searchT) {
+        try {
+            File file = new File(filePath);
+            FileReader fr = new FileReader(file);
+            BufferedReader reader = new BufferedReader(fr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            int linecount = 0;
+
+            while ((line= reader.readLine()) != null) {
+                linecount++;
+                int indexfound;
+                indexfound = line.indexOf(searchT);
+
+                if (indexfound > -1){
+                    sb.append(line);
+                    sb.append("\n");
+                }
+            }
+
+            reader.close();
+            fr.close();
+            return sb.toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Nothing found";
     }
 }

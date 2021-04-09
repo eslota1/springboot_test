@@ -13,15 +13,15 @@
 </head>
 <header th:insert="blocks/header :: header"></header>
 <body>
-    <div class="layer1">
-        <p class="tab">
+<div class="layer1">
+    <p class="tab">
         <th:block th:if="${history}">
             <th:block th:each="str, stat : ${history.split('\r\n|\r|\n', -1)}">
                 <th:block th:text="${str}"/>
                 <br th:if="${!stat.last}"/>
             </th:block>
         </th:block>
-        </p>
-    </div>
+    </p>
+</div>
 </body>
 </html>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head lang="en">
-    <meta charset="UTF-8"/>
     <title>Delete Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
    .layer1 {
@@ -16,8 +16,8 @@
 <td class="b-table_cell">
     <form class="software_engineering_class_form layer1"
           action="/delete"
-          role="delete"
-          aria-label="delete from the local file">
+          role="deleted"
+          aria-label="delete from the locat file">
         <div class="delete_input">
             <span class="delete_span">
                     <input class="input_control" tabindex="2" spellcheck="false" aria-label="delete" id="text" maxlength="400" name="post_text"></span>
@@ -29,18 +29,18 @@
             </button>
         </div>
         <div class="layer1">
-          <p class="tab">
-            <th:block th:if="${deleteAttempted}">
-              <th:block th:if="${deleted}">
-                <th:block>The requested post has been deleted from history.</th:block>
-              </th:block>
-              <th:block th:unless="${deleted}">
-                <th:block>The requested post does not exist in the history.</th:block>
-              </th:block>
-            </th:block>
-          </p>
+            <p class="tab">
+                <th:block th:if="${deleteAttempted}">
+                    <th:block th:if="${deleted}">
+                        <th:block>The requested post has been deleted from history.</th:block>
+                    </th:block>
+                    <th:block th:unless="${deleted}">
+                        <th:block>The requested post does not exist in the history.</th:block>
+                    </th:block>
+                </th:block>
+            </p>
         </div>
-    </div>
+        </div>
     </form>
 </td>
 

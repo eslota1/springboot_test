@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -22,7 +23,7 @@ public class PostHistoryController {
     @RequestMapping(value = "/api")
     public String postString(@RequestParam("post_input_text") String inputTest,
                              Model model) {
-        model.addAttribute("title","Post Page");
+        model.addAttribute("title", "Post Page");
         System.out.println(inputTest);
         String pathToLoggFile = env.getProperty("post.log.file");
         System.out.println(pathToLoggFile);
@@ -37,25 +38,33 @@ public class PostHistoryController {
         String pathToLoggFile = env.getProperty("post.log.file");
         PostLogger pl = new PostLogger(pathToLoggFile);
         String history = pl.readHistory();
-        model.addAttribute("history",history);
+        model.addAttribute("history", history);
         model.addAttribute("newLineChar", '\n');
         return "history";
     }
 
     @RequestMapping(value = "/delete")
-    public String deletePost(@RequestParam("post_text") String deleteText, 
-    				Model model) {
-	   	model.addAttribute("title", "Delete Page");
-	   	String pathToLogFile = env.getProperty("post.log.file");
-	   	PostLogger pl = new PostLogger(pathToLogFile);
-		if (!deleteText.isEmpty())
-		{
-			boolean deleted = pl.deleteString(deleteText);
-			model.addAttribute("deleted", deleted);
-			model.addAttribute("deleteAttempted", true);
-		}
+    public String deletePostString(@RequestParam("post_text") String deleteText, Model model) {
+        model.addAttribute("title", "Delete Page");
+        System.out.println(deleteText);
+        String pathToLoggFile = env.getProperty("post.log.file");
+        PostLogger pl = new PostLogger(pathToLoggFile);
+        boolean deleted = pl.deleteInputText(deleteText);
+        model.addAttribute("deleted", deleted);
+        if (!deleteText.isEmpty()) model.addAttribute("deleteAttempted", true);
+        System.out.println("deleted: " + deleted);
         return "delete";
     }
 
+    @RequestMapping(value = "/search")
+    public String searchPostString(@RequestParam("posts_text") String searchText, Model model) {
+        model.addAttribute("title", "Search Page");
+        System.out.println(searchText);
+        String pathToLoggFile = env.getProperty("post.log.file");
+        PostLogger pl = new PostLogger(pathToLoggFile);
+        String foundline = pl.searchInputText(searchText);
+        model.addAttribute("foundline", foundline);
+        if (!searchText.isEmpty()) model.addAttribute("searchAttempted", true);
+        return "search";
+    }
 }
-

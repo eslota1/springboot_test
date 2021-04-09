@@ -1,0 +1,6 @@
+stringtodelete
+toBeSearched
+notToBeSearched
+stringtodelete
+toBeSearched
+notToBeSearched
